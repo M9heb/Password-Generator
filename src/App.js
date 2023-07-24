@@ -5,60 +5,57 @@ import StrengthInputContainer from "./components/StrengthInputContainer";
 import CharacterLengthSlider from "./components/CharacterLengthSlider";
 import CheckboxInput from "./components/CheckboxInput";
 import GenerateButton from "./components/GenerateButton";
-function App() {
-  const [strengthArray, setStrengthArray] = useState([
-    {
-      type: "lowercase",
-      value: true,
-    },
-    {
-      type: "uppercase",
-      value: false,
-    },
-    {
-      type: "number",
-      value: false,
-    },
-    {
-      type: "symbol",
-      value: false,
-    },
-  ]);
-  const [strength, setStrength] = useState(1);
 
-  function calcStrength() {
-    let value = 0;
-    for (const item of strengthArray) {
-      if (item.value) value++;
-    }
-    setStrength(value);
-  }
+function App() {
+  const [uppercase, setUppercase] = useState(true);
+  const [lowercase, setLowercase] = useState(true);
+  const [number, setNumber] = useState(true);
+  const [symbol, setSymbol] = useState(true);
+  const [password, setPassword] = useState("P4$5W0rD!");
+  const [passwordLength, setPasswordLength] = useState(8);
+  let strength =
+    (uppercase && 1) + (lowercase && 1) + (number && 1) + (symbol && 1);
 
   const submitHandler = (event) => {
     event.preventDefault();
     generatePassword();
   };
-  const newValue = (item) => {
-    const newArray = strengthArray.map((x) => x);
-    for (let i = 0; i < newArray.length; i++)
-      if (item.name === newArray[i].name) newArray[i].value = item.value;
-    setStrengthArray(newArray);
-    calcStrength();
-    console.log(strength);
+
+  const generatePassword = () => {
+    const upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lowerCase = "abcdefghijklmnopqrstuvwxyz";
+    const numbers = "0123456789";
+    const symbols = "~!@#$%^&*()_+=-`[]{}/.,';?><:=";
+    let characterList = "";
+    if (uppercase) characterList += upperCase;
+    if (lowercase) characterList += lowerCase;
+    if (number) characterList += numbers;
+    if (symbol) characterList += symbols;
+    let tempPassword = "";
+
+    for (let i = 0; i < passwordLength; i++) {
+      const characterIndex = Math.round(Math.random() * characterList.length);
+      tempPassword += characterList.charAt(characterIndex);
+    }
+    setPassword(tempPassword);
   };
-  const generatePassword = () => {};
+
   return (
     <div className="container--app">
       <h1 className="heading--primary">Password Generator</h1>
-      <PasswordOutput />
+      <PasswordOutput password={password} />
       <form className="container">
-        <CharacterLengthSlider />
+        <CharacterLengthSlider
+          passwordLength={passwordLength}
+          setPasswordLength={setPasswordLength}
+        />
         <ul className="mb-2">
           <li>
             <CheckboxInput
               name="lowercase"
-              newValue={newValue}
-              value={strengthArray[0].value}
+              newValue={(value) => setLowercase(value)}
+              value={uppercase}
+              disabled={lowercase && !uppercase && !number && !symbol}
             >
               Include Lowercase Letters
             </CheckboxInput>
@@ -66,8 +63,9 @@ function App() {
           <li>
             <CheckboxInput
               name="uppercase"
-              newValue={newValue}
-              value={strengthArray[1].value}
+              newValue={(value) => setUppercase(value)}
+              value={lowercase}
+              disabled={!lowercase && uppercase && !number && !symbol}
             >
               Include Uppercase Letters
             </CheckboxInput>
@@ -76,8 +74,9 @@ function App() {
           <li>
             <CheckboxInput
               name="number"
-              newValue={newValue}
-              value={strengthArray[2].value}
+              newValue={(value) => setNumber(value)}
+              value={number}
+              disabled={!lowercase && !uppercase && number && !symbol}
             >
               Include Numbers
             </CheckboxInput>
@@ -85,8 +84,9 @@ function App() {
           <li>
             <CheckboxInput
               name="symbol"
-              newValue={newValue}
-              value={strengthArray[3].value}
+              newValue={(value) => setSymbol(value)}
+              value={symbol}
+              disabled={!lowercase && !uppercase && !number && symbol}
             >
               Include Symbols
             </CheckboxInput>

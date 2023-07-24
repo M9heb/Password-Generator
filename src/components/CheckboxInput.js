@@ -3,7 +3,7 @@ function CheckboxInput(props) {
   const [inputValue, setInputValue] = useState(props.value);
   const onChangeHandler = (event) => {
     setInputValue(event.target.checked);
-    props.newValue({ name: props.name, value: inputValue });
+    props.newValue(event.target.checked);
   };
   return (
     <label className="label" htmlFor={props.id}>
@@ -11,7 +11,9 @@ function CheckboxInput(props) {
         type="checkbox"
         name={props.name}
         className="text"
+        disabled={props.disabled}
         onChange={onChangeHandler}
+        checked={inputValue}
       />{" "}
       {props.children}
     </label>

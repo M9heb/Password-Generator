@@ -60,7 +60,7 @@ ul {
   font-weight: 700;
 }
 .container--app {
-  width: 40rem;
+  width: 45rem;
   display: flex;
   flex-direction: column;
   gap: 4rem;
@@ -116,8 +116,8 @@ input[type="checkbox"]:hover {
   justify-content: space-between;
 }
 .btn--icon {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2rem;
+  height: 2rem;
   fill: var(--color-green);
   transition: all 0.2s;
   cursor: pointer;
